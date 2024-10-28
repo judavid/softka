@@ -35,7 +35,6 @@ public class ClientControllerTest {
 
     @BeforeEach
     public void setUp() {
-        // Inicializa un cliente de prueba
         testClient = new ClientBody("Juan", "M", 30, "123456",
                 "123 Street", "123456789", "", "true");
     }
@@ -46,7 +45,6 @@ public class ClientControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(testClient)))
                 .andExpect(status().isOk())
-               // .andExpect(jsonPath("$.saved").value(true))
                 .andExpect(jsonPath("$.message").value("Saved Client"));
     }
 
@@ -67,13 +65,11 @@ public class ClientControllerTest {
 
     @Test
     public void testUpdateClient() throws Exception {
-        // Primero crea el cliente
         mockMvc.perform(post("/client")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(testClient)))
                 .andExpect(status().isOk());
 
-        // Prepara el cliente actualizado
         ClientBody updatedClient = new ClientBody("Juan", "M", 30, "123456",
                 "123 Street", "123456789", "", "true");
 
@@ -83,7 +79,6 @@ public class ClientControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(updatedClient)))
                 .andExpect(status().isOk())
-             //   .andExpect(jsonPath("$.updated").value(true))
                 .andExpect(jsonPath("$.message").value("Updated client"));
     }
 
@@ -96,10 +91,8 @@ public class ClientControllerTest {
 
         List<ClientResponse> clientResponses = getClientResponses();
 
-        // Luego intenta eliminar el cliente
         mockMvc.perform(delete("/client/"+clientResponses.get(0).getId()))
                 .andExpect(status().isOk())
-             //   .andExpect(jsonPath("$.deleted").value(true))
                 .andExpect(jsonPath("$.message").value("Deleted Client"));
     }
 
@@ -118,8 +111,6 @@ public class ClientControllerTest {
 
     private List<ClientResponse> extractedValue(ResultActions resultActions) throws UnsupportedEncodingException, JsonProcessingException {
         String jsonResponse = resultActions.andReturn().getResponse().getContentAsString();
-
-        // Convertir el JSON a un objeto Java
         return objectMapper.readValue(jsonResponse, new TypeReference<List<ClientResponse>>() {});
     }
 
